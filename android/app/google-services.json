@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "734802761562",
+    "project_id": "lifespark-technologies-5c8d0",
+    "storage_bucket": "lifespark-technologies-5c8d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734802761562:android:dd3e04c5d8bad05c384563",
+        "android_client_info": {
+          "package_name": "com.example.lifespark_assignment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-gUX6l1bVU9X2auYyDxjK-ALHB4ZSuE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
