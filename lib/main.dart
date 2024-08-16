@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget{
   return  GetMaterialApp(
     title: 'Flutter',
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: 'cv', scaffoldBackgroundColor: const Color.fromARGB(255, 247, 247, 247),),
+    theme: ThemeData(fontFamily: 'cv', scaffoldBackgroundColor: Color.fromARGB(255, 233, 241, 236),),
     home: SplashScreen(),
   );
  }

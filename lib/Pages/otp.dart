@@ -1,37 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lifespark_assignment/Pages/email.dart';
 import 'package:lifespark_assignment/Pages/wrapper.dart';
+import 'package:lifespark_assignment/Widgets/button.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 
-class OtpPage extends StatefulWidget{
+class OtpPage extends StatefulWidget {
   final String? vid;
-  const OtpPage({super.key,  this.vid});
-  @override  
-  State<OtpPage> createState()=> _OtpPageState();
+  const OtpPage({super.key, this.vid});
+  @override
+  State<OtpPage> createState() => _OtpPageState();
 }
+
 class _OtpPageState extends State<OtpPage> {
-  var code ='';
-  signIn() async{
+  var code = '';
+  bool isLoading = false;
+  signIn() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: widget.vid!,
       smsCode: code,
     );
-    try{
-      await FirebaseAuth.instance.signInWithCredential(credential).then((value){
-        Get.offAll(Wrapper());
+    try {
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .then((value) {
+        Get.to(EmailPage());
       });
-    }on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch (e) {
       Get.snackbar('Error Occured', e.code);
-    }
-    catch(e){
+    } catch (e) {
       Get.snackbar('Error Occured', e.toString());
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading
+      });
     }
   }
-  @override   
-  Widget build(BuildContext context){
-     return Scaffold(
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -58,7 +71,8 @@ class _OtpPageState extends State<OtpPage> {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'Enter your Code',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -70,11 +84,21 @@ class _OtpPageState extends State<OtpPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: textcode()),
-                   const SizedBox(height: 20),
-                  button(),
+                  SizedBox(width: double.infinity, child: textcode()),
+                  const SizedBox(height: 20),
+                  CommonButton(
+                    title: 'Verify',
+                    onPressed: signIn,
+                    isLoading: isLoading,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Resend the Code',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline),
+                  ),
                 ],
               ),
             ),
@@ -83,44 +107,28 @@ class _OtpPageState extends State<OtpPage> {
       ),
     );
   }
-  Widget textcode(){
-    return Center(child: 
-    Padding(padding: const EdgeInsets.all(6.0),
-    child: Pinput(
-      length: 6,
-      onChanged: (value){
-        setState(() {
-          code = value;
-        });
-      },
-       defaultPinTheme: PinTheme(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.grey.shade200, // Background color of the pin field
+
+  Widget textcode() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Pinput(
+          length: 6,
+          onChanged: (value) {
+            setState(() {
+              code = value;
+            });
+          },
+          defaultPinTheme: PinTheme(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey.shade200, // Background color of the pin field
+            ),
           ),
         ),
-    ),),);
-  }
-  Widget button() {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9, 
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0F5749), // Background color
-          foregroundColor: Colors.white, // Text color
-          padding: const EdgeInsets.symmetric(horizontal: 20), // Adjust padding
-          fixedSize: const Size.fromHeight(65), // Set the height
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12), // Customize the border radius
-          ),
-        ),
-        onPressed: (){
-          signIn();
-        }
-        ,
-        child: const Text('Verify'),)
+      ),
     );
   }
 }

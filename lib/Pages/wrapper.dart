@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lifespark_assignment/Pages/email.dart';
 import 'package:lifespark_assignment/Pages/home.dart';
 import 'package:lifespark_assignment/Pages/login.dart';
 
@@ -20,7 +21,7 @@ class _WrapperState extends State<Wrapper>{
             return HomePage();
           }
           else{
-            return PhoneHome();
+            return EmailPage();
           }
       },),
     );

@@ -2,17 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lifespark_assignment/Pages/otp.dart';
+import 'package:lifespark_assignment/Pages/wrapper.dart';
 import 'package:lifespark_assignment/Widgets/button.dart';
 import 'package:lottie/lottie.dart';
 
-class PhoneHome extends StatefulWidget {
-  const PhoneHome({super.key});
+class EmailPage extends StatefulWidget {
+  const EmailPage({super.key});
 
   @override
-  State<PhoneHome> createState() => _PhoneHomeState();
+  State<EmailPage> createState() => _EmailPageState();
 }
 
-class _PhoneHomeState extends State<PhoneHome> {
+class _EmailPageState extends State<EmailPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phonenumber = TextEditingController();
   bool isLoading = false;
@@ -38,7 +39,7 @@ class _PhoneHomeState extends State<PhoneHome> {
 
             // Navigate to OTP page after a slight delay to ensure the loading state is updated
             await Future.delayed(const Duration(milliseconds: 100));
-            Get.to(OtpPage(vid: vid));
+           Get.offAll(Wrapper());
           },
           codeAutoRetrievalTimeout: (vid) {},
         );
@@ -73,7 +74,7 @@ class _PhoneHomeState extends State<PhoneHome> {
                 children: [
                   Center(
                     child: Lottie.asset(
-                      'assets/animation.json',
+                      'assets/animation3.json',
                       height: 400,
                       reverse: true,
                       repeat: true,
@@ -84,14 +85,14 @@ class _PhoneHomeState extends State<PhoneHome> {
                   const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Enter your phone number',
+                      'Enter your Email',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'You will receive a 6 digit code for phone number verification',
+                    'Please provide your email address to create your account.',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color.fromARGB(255, 122, 122, 122),
@@ -107,7 +108,7 @@ class _PhoneHomeState extends State<PhoneHome> {
                   ),
                   const SizedBox(height: 20),
                   CommonButton(
-                      title: 'Receive OTP',
+                      title: 'Continue',
                       onPressed: sendcode,
                       isLoading: isLoading),
                 ],
@@ -122,25 +123,10 @@ class _PhoneHomeState extends State<PhoneHome> {
   Widget phoneText() {
     return TextFormField(
       controller: phonenumber,
-      keyboardType: TextInputType.number,
-      maxLength: 12,
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        prefixIcon: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(width: 8),
-            Icon(Icons.phone), // Phone icon
-            SizedBox(width: 4), // Spacing between icon and text
-            Text(
-              '+91 |  ',
-              style: TextStyle(
-                color: Colors.black, // Text color for +91
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        labelText: 'Phone number',
+        prefixIcon: const Icon(Icons.email), 
+        labelText: 'Email Address',
         hintStyle: TextStyle(color: Colors.green.shade700),
         labelStyle: TextStyle(color: Colors.green.shade700),
         filled: true, // Enables the fill color
@@ -169,10 +155,11 @@ class _PhoneHomeState extends State<PhoneHome> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter a phone number';
-        } else if (value.length != 10) {
-          return 'Phone number must be 10 digits';
-        }
+          return 'Please enter a Email';
+        } 
+        // else if (value.length != 10) {
+        //   return 'Email must be Valida';
+        // }
         return null;
       },
     );
