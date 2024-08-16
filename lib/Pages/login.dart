@@ -17,16 +17,16 @@ class _PhoneHomeState extends State<PhoneHome> {
   final TextEditingController phonenumber = TextEditingController();
   bool isLoading = false;
   sendcode() async {
-    setState(() {
-      isLoading = true; // Start loading
-    });
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        isLoading = true; // Start loading
+      });
       try {
         await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: '+91' + phonenumber.text,
           verificationCompleted: (PhoneAuthCredential credential) {},
           verificationFailed: (FirebaseAuthException e) {
-             setState(() {
+            setState(() {
               isLoading = false; // Stop loading
             });
             Get.snackbar('Error occurred', e.code);

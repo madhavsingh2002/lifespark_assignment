@@ -18,16 +18,16 @@ class _EmailPageState extends State<EmailPage> {
   final TextEditingController phonenumber = TextEditingController();
   bool isLoading = false;
   sendcode() async {
-    setState(() {
-      isLoading = true; // Start loading
-    });
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        isLoading = true; // Start loading
+      });
       try {
         await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: '+91' + phonenumber.text,
           verificationCompleted: (PhoneAuthCredential credential) {},
           verificationFailed: (FirebaseAuthException e) {
-             setState(() {
+            setState(() {
               isLoading = false; // Stop loading
             });
             Get.snackbar('Error occurred', e.code);
@@ -39,7 +39,7 @@ class _EmailPageState extends State<EmailPage> {
 
             // Navigate to OTP page after a slight delay to ensure the loading state is updated
             await Future.delayed(const Duration(milliseconds: 100));
-           Get.offAll(Wrapper());
+            Get.offAll(Wrapper());
           },
           codeAutoRetrievalTimeout: (vid) {},
         );
@@ -125,7 +125,7 @@ class _EmailPageState extends State<EmailPage> {
       controller: phonenumber,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.email), 
+        prefixIcon: const Icon(Icons.email),
         labelText: 'Email Address',
         hintStyle: TextStyle(color: Colors.green.shade700),
         labelStyle: TextStyle(color: Colors.green.shade700),
@@ -156,7 +156,7 @@ class _EmailPageState extends State<EmailPage> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter a Email';
-        } 
+        }
         // else if (value.length != 10) {
         //   return 'Email must be Valida';
         // }
