@@ -9,7 +9,8 @@ import 'package:pinput/pinput.dart';
 
 class OtpPage extends StatefulWidget {
   final String? vid;
-  const OtpPage({super.key, this.vid});
+  final String? phonenumber;
+  const OtpPage({super.key, this.vid, this.phonenumber});
   @override
   State<OtpPage> createState() => _OtpPageState();
 }
@@ -76,9 +77,9 @@ class _OtpPageState extends State<OtpPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Please enter the 6 digit verification code sent to +91-934534234',
-                    style: TextStyle(
+                  Text(
+                     'Please enter the 6 digit verification code sent to +91-${widget.phonenumber}',
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color.fromARGB(255, 122, 122, 122),
                     ),
@@ -124,6 +125,7 @@ class _OtpPageState extends State<OtpPage> {
             height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey),
               color: Colors.grey.shade200, // Background color of the pin field
             ),
           ),

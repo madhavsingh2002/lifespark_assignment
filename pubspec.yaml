@@ -41,6 +41,8 @@ dependencies:
   pinput:
   lottie: ^3.1.2
   google_fonts:
+  shared_preferences: 
+  toastification:
 dev_dependencies:
   flutter_test:
     sdk: flutter

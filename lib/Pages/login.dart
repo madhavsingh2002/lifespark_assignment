@@ -38,7 +38,7 @@ class _PhoneHomeState extends State<PhoneHome> {
 
             // Navigate to OTP page after a slight delay to ensure the loading state is updated
             await Future.delayed(const Duration(milliseconds: 100));
-            Get.to(OtpPage(vid: vid));
+            Get.to(OtpPage(vid: vid, phonenumber : phonenumber.text));
           },
           codeAutoRetrievalTimeout: (vid) {},
         );

@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:lifespark_assignment/Pages/home.dart';
 import 'package:lifespark_assignment/Pages/otp.dart';
-import 'package:lifespark_assignment/Pages/wrapper.dart';
 import 'package:lifespark_assignment/Widgets/button.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailPage extends StatefulWidget {
   const EmailPage({super.key});
@@ -15,47 +17,8 @@ class EmailPage extends StatefulWidget {
 
 class _EmailPageState extends State<EmailPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController phonenumber = TextEditingController();
+  final TextEditingController emailcontroller = TextEditingController();
   bool isLoading = false;
-  sendcode() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        isLoading = true; // Start loading
-      });
-      try {
-        await FirebaseAuth.instance.verifyPhoneNumber(
-          phoneNumber: '+91' + phonenumber.text,
-          verificationCompleted: (PhoneAuthCredential credential) {},
-          verificationFailed: (FirebaseAuthException e) {
-            setState(() {
-              isLoading = false; // Stop loading
-            });
-            Get.snackbar('Error occurred', e.code);
-          },
-          codeSent: (String vid, int? token) async {
-            setState(() {
-              isLoading = false; // Stop loading
-            });
-
-            // Navigate to OTP page after a slight delay to ensure the loading state is updated
-            await Future.delayed(const Duration(milliseconds: 100));
-            Get.offAll(Wrapper());
-          },
-          codeAutoRetrievalTimeout: (vid) {},
-        );
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          isLoading = false; // Stop loading
-        });
-        Get.snackbar('Error Occurred', e.code);
-      } catch (e) {
-        setState(() {
-          isLoading = false; // Stop loading
-        });
-        Get.snackbar('Error Occurred', e.toString());
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +49,8 @@ class _EmailPageState extends State<EmailPage> {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'Enter your Email',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -103,13 +66,13 @@ class _EmailPageState extends State<EmailPage> {
                     key: _formKey,
                     child: SizedBox(
                       width: double.infinity,
-                      child: phoneText(),
+                      child: EmailText(),
                     ),
                   ),
                   const SizedBox(height: 20),
                   CommonButton(
                       title: 'Continue',
-                      onPressed: sendcode,
+                      onPressed: sendEmail,
                       isLoading: isLoading),
                 ],
               ),
@@ -120,9 +83,9 @@ class _EmailPageState extends State<EmailPage> {
     );
   }
 
-  Widget phoneText() {
+  Widget EmailText() {
     return TextFormField(
-      controller: phonenumber,
+      controller: emailcontroller,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.email),
@@ -155,13 +118,33 @@ class _EmailPageState extends State<EmailPage> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter a Email';
+          return 'Please enter an Email';
+        } else if (!GetUtils.isEmail(value)) {
+          return 'Please enter a valid Email';
         }
-        // else if (value.length != 10) {
-        //   return 'Email must be Valida';
-        // }
         return null;
       },
     );
+  }
+
+  Future<void> sendEmail() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('emailUser', emailcontroller.text.trim());
+        Get.to(() => HomePage());
+      } catch (e) {
+        // Handle network error
+        Get.snackbar('Error', 'An error occurred. Please try again.');
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }
